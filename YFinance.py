@@ -1,0 +1,48 @@
+import yfinance as yf
+import pandas as pd
+import time
+class YFinance():
+    def __init__(self, ticker) -> None:
+        self.ticker = ticker
+    #
+    def getLast5Days(self): # returns a dictionary with the ticker name as key and dataframe as value.
+        result = {}
+        s = yf.download(tickers=self.ticker, period='5d', interval='1m')
+        s = s.tz_localize(None) # This is to set the time format.
+        s.to_excel(f"Stocks/{self.ticker}/{self.ticker}_1m.xlsx", index=True)
+        #s.to_excel(f"Stocks/{self.ticker}/Final1.xlsx", index=True)
+    #
+    def getLast60Days(self):
+        result = yf.download(tickers=self.ticker, period='60d', interval='2m')
+        result = result.tz_localize(None) # This is to set the time format.
+        result.to_excel(f"Stocks/{self.ticker}/{self.ticker}_60m.xlsx", index=True)
+        #result.to_excel(f"Stocks/{self.ticker}/Final60.xlsx", index=True)
+        time.sleep(1)
+    #
+    def getHighLow(self):
+        historical = yf.download(tickers=self.ticker, period="6mo", interval="1d")
+        historical.to_excel(f"Stocks/{self.ticker}/{self.ticker}_HighLow.xlsx", index=False)
+        self.updateStatistic()
+    #    
+    def updateStatistic(self):
+            df = pd.DataFrame()
+            main = pd.read_excel(f"Stocks/{self.ticker}/{self.ticker}_HighLow.xlsx")["Open"].describe().to_json(indent=0)
+            self.writeJson(main, f"Stocks/{self.ticker}/{self.ticker}_Statistic.json")
+    # writes json_status to fileName.json
+    def writeJson(self, json_status, fileName):
+        with open(fileName, "w") as statusFile:
+            statusFile.write(json_status)
+            statusFile.close()
+
+    def joinData(self, n):
+        f1 = pd.read_excel(f"Stocks/{self.ticker}/Final{n}.xlsx")
+        f2 = pd.read_excel(f"Stocks/{self.ticker}/{self.ticker}_{n}m.xlsx")
+        f3 = f1.append(f2)
+        f3.drop_duplicates() # last added.
+        f3.to_excel(f"Stocks/{self.ticker}/{self.ticker}Final{n}.xlsx", index=False)
+
+
+
+
+
+
