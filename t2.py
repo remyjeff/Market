@@ -172,7 +172,7 @@ class Nasdaq:
         #R = Robin()
         while(True):
             print(f"Running {name} Thread!")
-            self.sleepTime(name)
+            #self.sleepTime(name)
             i = 2
             if (name == "date7"):
                 #R.signIn()
@@ -196,8 +196,8 @@ class Nasdaq:
             #self.filter(price, statistic)
             #R.signOut()
         
-            #self.runIt("add", ".")
-            #self.runIt("commit", "-m", f"This is the {self.counter}th saving data.")
+            self.runIt("add", ".")
+            self.runIt("commit", "-m", f"This is the {self.counter}th saving data.")
             self.counter += 1
             break
     #
