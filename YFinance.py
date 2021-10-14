@@ -33,16 +33,10 @@ class YFinance():
         with open(fileName, "w") as statusFile:
             statusFile.write(json_status)
             statusFile.close()
-
+    #
     def joinData(self, n):
         f1 = pd.read_excel(f"Stocks/{self.ticker}/Final{n}.xlsx")
         f2 = pd.read_excel(f"Stocks/{self.ticker}/{self.ticker}_{n}m.xlsx")
         f3 = f1.append(f2)
         f3.drop_duplicates() # last added.
         f3.to_excel(f"Stocks/{self.ticker}/{self.ticker}Final{n}.xlsx", index=False)
-
-
-
-
-
-

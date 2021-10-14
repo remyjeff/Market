@@ -41,50 +41,6 @@ class Nasdaq:
         today = datetime.date.today().ctime().split(" ")
         print('ctime:', today)
         time.sleep(604800)
-    #
-    def makeNewFolder(self, folder):
-        if type(folder) is list:
-            for f in folder:
-                try:
-                    os.makedirs("Stocks/"+f)
-                except OSError as e:
-                    if e.errno != errno.EEXIST:
-                        raise
-        else:
-            try:
-                os.makedirs("Stocks/"+folder)
-            except OSError as e:
-                if e.errno != errno.EEXIST:
-                    raise
-    #
-    def renameFiles(self, s):
-        for name in self.stocks:
-            old_name = r""+name + "/" + name + ".csv"
-            new_name = r""+name + "/" + name + "_" +str(s) + "m.csv"
-            if os.path.isfile(new_name):
-                print("The file already exists")
-            else:
-                os.rename(old_name, new_name)
-    #
-    def newFiles(self, first, last, extension):
-        if type(first) is list:
-            for file in first:
-                f = open(file + "/" + file + last + extension, "x")
-                f.close()
-        else:
-            f = open(first + "/" + first + last + extension, "x")
-            f.close() 
-    #
-    def deleteOldFiles(self, s): # s is the minute reference.
-        for name in self.stocks:
-            p1 = f"Stocks/{name}/{name}_2m.xlsx"
-            p2 = f"Stocks/{name}/{name}_1m.xlsx"
-            if os.path.exists(p1):
-                os.remove(p1)
-            if os.path.exists(p2):
-                os.remove(p2)
-            else:
-                print(f"{p2} does not exist!")
     # git commands
     def runIt(self, *args):
         return subprocess.check_call(['git'] + list(args))
