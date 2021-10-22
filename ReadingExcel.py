@@ -1,10 +1,14 @@
 import pandas as pd
 
-def readExcel():
-    df = pd.read_excel('./Stocks/AAPL/Final1.xlsx')
+def readExcel(filePath):
+    df = pd.read_excel(filePath)
+    result = []
     for d in df.index:
-        print(df["Datetime"][d], df["Open"][d], df["High"][d], df["Low"][d], df["Close"][d], df["Volume"][d])
-        return f"""(2, {["Datetime"][d]}, {df["Open"][d]}, {df["High"][d]}, {df["Low"][d]}, {df["Close"][d]}, {df["Volume"][d]})"""
+        if d != 0:
+            #print(df["Datetime"][d], df["Open"][d], df["High"][d], df["Low"][d], df["Close"][d], df["Volume"][d])
+            RESULT = f"""(1, '{df["Datetime"][d]}', {df["Open"][d]}, {df["High"][d]}, {df["Low"][d]}, {df["Close"][d]}, {df["Volume"][d]})"""
+            result.append(RESULT)
+    return result
 
 
 if __name__ == "__main__":
