@@ -16,7 +16,7 @@ class Nasdaq:
         #self.start()
         self.runIt("add", ".")
         self.runIt("commit", "-m", f".")
-        self.dateAddition("date60")
+        #self.dateAddition("date60")
     #
     def getDigits(self, num):
         if (num / 10) < 1:
