@@ -10,7 +10,7 @@ from YFinance import YFinance
 
 class Nasdaq:
     def __init__(self):
-        self.stocks = ["TSLA"]#, "AAPL", "PLTR", "ACB", "TLRY", "RTX", "BA", "NFLX", "SPY", "FSLY", "JKS", "PLUG", "FCEL"]
+        self.stocks = ["TSLA", "AAPL", "PLTR", "ACB", "TLRY", "RTX", "BA", "NFLX", "SPY", "FSLY", "JKS", "PLUG", "FCEL"]
         self.counter = 0
         self.currentDate = self.loadJson(lambda name: name, "currentDate.json")
         self.start()
@@ -128,7 +128,7 @@ class Nasdaq:
         #R = Robin()
         while(True):
             print(f"Running {name} Thread!")
-            self.sleepTime(name)
+            #self.sleepTime(name)
             i = 2
             if (name == "date7"):
                 for name in self.stocks:
