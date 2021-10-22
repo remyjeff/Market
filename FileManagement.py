@@ -46,4 +46,5 @@ if __name__ == "__main__":
     # makeNewFolder(lambda name : f"Stocks/"+name, ["NVDA"])
     # newFiles(lambda name: f"Stocks/{name}/{name}Final.xlsx", ["NVDA"])
     # deleteOldFiles(lambda name: f"Stocks/{name}/{name}Final.xlsx", ["NVDA"])
-    pass
+    names = ["TSLA", "AAPL", "PLTR", "ACB", "TLRY", "RTX", "BA", "NFLX", "SPY", "FSLY", "JKS", "PLUG", "FCEL"]
+    deleteOldFiles(lambda name: f"Stocks/{name}/.xlsx", names)

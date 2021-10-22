@@ -134,14 +134,14 @@ class Nasdaq:
                 for name in self.stocks:
                     M1 = YFinance(name)
                     M1.getLast5Days()
-                    M1.joinData(1)
+                    #M1.joinData(1)
                     M1.getHighLow()
             else:
                 i = 1
                 for name in self.stocks:
                     M2 = YFinance(name)
                     M2.getLast60Days()
-                    M2.joinData(60)
+                    #M2.joinData(60)
             #self.deleteOldFiles(i)
             
             self.clear()
