@@ -10,7 +10,7 @@ from YFinance import YFinance
 
 class Nasdaq:
     def __init__(self):
-        self.stocks = ["TSLA", "AAPL", "PLTR", "ACB", "TLRY", "RTX", "BA", "NFLX", "SPY", "FSLY", "JKS", "PLUG", "FCEL"]
+        self.stocks = ["NVDA"]
         self.counter = 0
         self.currentDate = self.loadJson(lambda name: name, "currentDate.json")
         self.start()
