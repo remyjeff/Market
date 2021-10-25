@@ -38,7 +38,8 @@ def execute_read_query(connection, query):
 def pushDataToDB(stocks, table, fileName):
     connection = create_connection("localhost", "root", "", "STOCK_MARKET")
     for ticker in stocks:
-        data = readExcel(f"./Stocks/{ticker}/{fileName}.xlsx")
+        id = getId(ticker)
+        data = readExcel(id, f"./Stocks/{ticker}/{fileName}.xlsx")
         for d in data:
             inserting = f"""
             INSERT INTO {table}(Id, Datetime, Open, High, Low, Close, Volume)
@@ -60,6 +61,15 @@ def pushStock(stocks):
             ('{d}');
             """
             execute_query(connection, inserting)
+
+def getId(name):
+    connection = create_connection("localhost", "root", "", "STOCK_MARKET")
+    select_stocks = """
+    SELECT * FROM STOCKS;"""
+    stocks = execute_read_query(connection, select_stocks)
+    for user in stocks:
+        if name == user[1]:
+            return user[0]
 
 #pushDataToDB()
 stocks = ["NVDA", "TSLA", "AAPL", "PLTR", "ACB", "TLRY", "RTX", "BA", "NFLX", "SPY", "FSLY", "JKS", "PLUG", "FCEL"]

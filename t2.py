@@ -7,14 +7,14 @@ from robin import Robin
 import yfinance as yf
 from multiprocessing import Process
 from YFinance import YFinance
-import StockDB
+from StockDB import *
 
 class Nasdaq:
     def __init__(self):
         self.stocks = ["NVDA", "TSLA", "AAPL", "PLTR", "ACB", "TLRY", "RTX", "BA", "NFLX", "SPY", "FSLY", "JKS", "PLUG", "FCEL"]
         self.counter = 0
         self.currentDate = self.loadJson(lambda name: name, "currentDate.json")
-        #self.start()
+        self.start()
     #
     def getDigits(self, num):
         if (num / 10) < 1:
@@ -135,14 +135,14 @@ class Nasdaq:
                 for name in self.stocks:
                     M1 = YFinance(name)
                     M1.getLast5Days()
-                    M1.getHighLow()
-                StockDB.pushDataToDB(self.stocks, "MINUTE", "Minute")
+                    #M1.getHighLow()
+                pushDataToDB(self.stocks, "MINUTE", "Minute")
             else:
                 i = 1
                 for name in self.stocks:
                     M2 = YFinance(name)
                     M2.getLast60Days()
-                StockDB.pushDataToDB(self.stocks, "TWO_MINUTE", "TwoMinute")
+                pushDataToDB(self.stocks, "TWO_MINUTE", "TwoMinute")
             # I have to push these files into the database first before I do anything else.
 
             #self.deleteOldFiles(i)
