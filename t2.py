@@ -14,7 +14,8 @@ class Nasdaq:
         self.stocks = ["NVDA", "TSLA", "AAPL", "PLTR", "ACB", "TLRY", "RTX", "BA", "NFLX", "SPY", "FSLY", "JKS", "PLUG", "FCEL"]
         self.counter = 0
         self.currentDate = self.loadJson(lambda name: name, "currentDate.json")
-        self.start()
+        self.run("date7")
+        #self.start()
     #
     def getDigits(self, num):
         if (num / 10) < 1:
@@ -129,12 +130,12 @@ class Nasdaq:
         #R = Robin()
         while(True):
             print(f"Running {name} Thread!")
-            self.sleepTime(name)
+            #self.sleepTime(name)
             i = 2
             if (name == "date7"):
-                for name in self.stocks:
-                    M1 = YFinance(name)
-                    M1.getLast5Days()
+                #for name in self.stocks:
+                    #M1 = YFinance(name)
+                    #M1.getLast5Days()
                     #M1.getHighLow()
                 pushDataToDB(self.stocks, "MINUTE", "Minute")
             else:
@@ -146,7 +147,7 @@ class Nasdaq:
             # I have to push these files into the database first before I do anything else.
 
             #self.deleteOldFiles(i)
-            
+            self.updateStatus(name)
             self.clear()
             #price = R.getLatestPrice(self.stocks)
             #statistic = self.loadJson(lambda n : f"Stocks/{n}/{n}_Statistic.json", self.stocks)
@@ -156,15 +157,14 @@ class Nasdaq:
             self.runIt("add", ".")
             self.runIt("commit", "-m", f"This is the {self.counter}th saving data.")
             self.counter += 1
-            break
     #
     def start(self):
         print(f"Running Start.")
         try:
             p0 = Process(target=self.run, args=('date7',))
             p0.start()
-            p1 = Process(target=self.run, args=('date60',))
-            p1.start()
+            #p1 = Process(target=self.run, args=('date60',))
+            #p1.start()
         except:
             print("Error: Unable to start thread.")
 if __name__ == '__main__':
