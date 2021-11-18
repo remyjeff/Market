@@ -139,10 +139,10 @@ class Nasdaq:
                     #M1.getHighLow()
                 pushDataToDB(self.stocks, "MINUTE", "Minute")
             else:
-                i = 1
-                for name in self.stocks:
-                    M2 = YFinance(name)
-                    M2.getLast60Days()
+                #i = 1
+                #for name in self.stocks:
+                    #M2 = YFinance(name)
+                    #M2.getLast60Days()
                 pushDataToDB(self.stocks, "TWO_MINUTE", "TwoMinute")
             # I have to push these files into the database first before I do anything else.
 
@@ -157,14 +157,16 @@ class Nasdaq:
             self.runIt("add", ".")
             self.runIt("commit", "-m", f"This is the {self.counter}th saving data.")
             self.counter += 1
+            break
+        print("Done Running: ", name)
     #
     def start(self):
         print(f"Running Start.")
         try:
             p0 = Process(target=self.run, args=('date7',))
             p0.start()
-            #p1 = Process(target=self.run, args=('date60',))
-            #p1.start()
+            p1 = Process(target=self.run, args=('date60',))
+            p1.start()
         except:
             print("Error: Unable to start thread.")
 if __name__ == '__main__':
