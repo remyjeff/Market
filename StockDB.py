@@ -19,7 +19,7 @@ def create_connection(host_name, user_name, user_password, db_name):
 def execute_query(connection, query):
     cursor = connection.cursor()
     try:
-        cursor.execute(query)
+        cursor.execute(query) # error is here.
         connection.commit()
         #print("Query executed successfully")
     except Error as e:
