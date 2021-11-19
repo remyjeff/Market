@@ -14,8 +14,9 @@ class Nasdaq:
         self.stocks = ["NVDA", "TSLA", "AAPL", "PLTR", "ACB", "TLRY", "RTX", "BA", "NFLX", "SPY", "FSLY", "JKS", "PLUG", "FCEL"]
         self.counter = 0
         self.currentDate = self.loadJson(lambda name: name, "currentDate.json")
-        self.run("date7")
-        #self.start()
+        #self.run("date7")
+        #self.run("date60")
+        self.start()
     #
     def getDigits(self, num):
         if (num / 10) < 1:
@@ -127,28 +128,28 @@ class Nasdaq:
         os.system('cls' if os.name=='nt' else 'clear')
     #
     def run(self, name):
-        #R = Robin()
         while(True):
             print(f"Running {name} Thread!")
-            #self.sleepTime(name)
+            self.sleepTime(name)
             i = 2
             if (name == "date7"):
-                #for name in self.stocks:
-                    #M1 = YFinance(name)
-                    #M1.getLast5Days()
-                    #M1.getHighLow()
+                for name in self.stocks:
+                    M1 = YFinance(name)
+                    M1.getLast5Days()
+                    M1.getHighLow()
                 pushDataToDB(self.stocks, "MINUTE", "Minute")
             else:
-                #i = 1
-                #for name in self.stocks:
-                    #M2 = YFinance(name)
-                    #M2.getLast60Days()
+                i = 1
+                for name in self.stocks:
+                    M2 = YFinance(name)
+                    M2.getLast60Days()
                 pushDataToDB(self.stocks, "TWO_MINUTE", "TwoMinute")
             # I have to push these files into the database first before I do anything else.
-
             #self.deleteOldFiles(i)
             self.updateStatus(name)
             self.clear()
+            
+            #R = Robin()
             #price = R.getLatestPrice(self.stocks)
             #statistic = self.loadJson(lambda n : f"Stocks/{n}/{n}_Statistic.json", self.stocks)
             #self.filter(price, statistic)
