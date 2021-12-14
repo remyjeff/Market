@@ -5,7 +5,7 @@ import os, errno
 import subprocess, json, sys, path
 from robin import Robin
 import yfinance as yf
-from multiprocessing import Process
+from multiprocessing import Process, Lock
 from YFinance import YFinance
 from StockDB import *
 
@@ -16,6 +16,7 @@ class Nasdaq:
         self.currentDate = self.loadJson(lambda name: name, "currentDate.json")
         #self.run("date7")
         #self.run("date60")
+        self.lock = False
         self.start()
     #
     def getDigits(self, num):
@@ -71,6 +72,7 @@ class Nasdaq:
         self.dateAddition(fileName)
         json_status = json.dumps(self.currentDate, indent=4)
         self.writeJson(json_status, "currentDate.json")
+        self.currentDate = self.loadJson(lambda name: name, "currentDate.json")
     # Calculates the difference between the next date and now, and then sleep for the result.
     def sleepTime(self, fileName):
         day = datetime.datetime.fromisoformat(self.currentDate[fileName]) - datetime.datetime.now()
@@ -146,8 +148,14 @@ class Nasdaq:
                 pushDataToDB(self.stocks, "TWO_MINUTE", "TwoMinute")
             # I have to push these files into the database first before I do anything else.
             #self.deleteOldFiles(i)
+            print("Updating next date for : ", name)
+            while(self.lock):
+                print("Lock is on!")
+                time.sleep(3)
+            self.lock = True
             self.updateStatus(name)
-            self.clear()
+            self.lock = False
+            #self.clear()
             
             #R = Robin()
             #price = R.getLatestPrice(self.stocks)
@@ -166,8 +174,10 @@ class Nasdaq:
         try:
             p0 = Process(target=self.run, args=('date7',))
             p0.start()
+            time.sleep(3)
             p1 = Process(target=self.run, args=('date60',))
             p1.start()
+            
         except:
             print("Error: Unable to start thread.")
 if __name__ == '__main__':
