@@ -61,6 +61,7 @@ def pushStock(stocks):
             ('{d}');
             """
             execute_query(connection, inserting)
+    print(stocks, " got added to STOCKS")
 
 def getId(name):
     connection = create_connection("localhost", "root", "", "STOCK_MARKET")
@@ -71,6 +72,15 @@ def getId(name):
         if name == user[1]:
             return user[0]
 
+def isInStocks(name):
+    connection = create_connection("localhost", "root", "", "STOCK_MARKET")
+    select_stocks = """
+    SELECT * FROM STOCKS;"""
+    stocks = execute_read_query(connection, select_stocks)
+    for user in stocks:
+        if name == user[1]:
+            return True
+    return False
 #pushDataToDB()
-stocks = ["NVDA", "TSLA", "AAPL", "PLTR", "ACB", "TLRY", "RTX", "BA", "NFLX", "SPY", "FSLY", "JKS", "PLUG", "FCEL"]
+stocks = ["NVDA", "TSLA", "AAPL", "PLTR", "ACB", "TLRY", "RTX", "BA", "NFLX", "SPY", "FSLY", "JKS", "PLUG", "FCEL", "FB"]
 #pushStock(stocks)
