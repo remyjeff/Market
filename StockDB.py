@@ -71,7 +71,7 @@ def getId(name):
     for user in stocks:
         if name == user[1]:
             return user[0]
-
+    
 def isInStocks(name):
     connection = create_connection("localhost", "root", "", "STOCK_MARKET")
     select_stocks = """
