@@ -3,6 +3,7 @@ import pandas as pd
 import time, datetime
 import os, errno
 import subprocess, json, sys, path
+from MyTime import *
 from robin import Robin
 import yfinance as yf
 from multiprocessing import Process, Lock
@@ -13,72 +14,74 @@ class Nasdaq:
     def __init__(self):
         self.stocks = ["NVDA", "TSLA", "AAPL", "PLTR", "ACB", "TLRY", "RTX", "BA", "NFLX", "SPY", "FSLY", "JKS", "PLUG", "FCEL"]
         self.counter = 0
-        self.currentDate = self.loadJson(lambda name: name, "currentDate.json")
+        #self.currentDate = self.loadJson(lambda name: name, "currentDate.json")
+        currentDate = getDate()
         #self.run("date7")
         #self.run("date60")
+
         self.lock = False
         self.start()
-    #
-    def getDigits(self, num):
-        if (num / 10) < 1:
-            return "0"+str(num)
-        return str(num)
-    #
-    def getStringOfDate(self, date):
-        res = "" + str(date.year) + "-" + self.getDigits(date.month) + "-" + self.getDigits(date.day) + " 16:00:00.000000"
-        return res
-    #
-    def dateAddition(self, fileName):
-        if fileName == "date60":
-            self.day60 = datetime.datetime.fromisoformat(self.currentDate["date60"]) + datetime.timedelta(60)
-            self.currentDate[fileName] = self.getStringOfDate(self.day60)
-        elif fileName == "date7":
-            self.day7 = datetime.datetime.fromisoformat(self.currentDate["date7"]) + datetime.timedelta(7)
-            self.currentDate[fileName] = self.getStringOfDate(self.day7)
-        else:
-            print(f"Wrong date file: <{fileName}>")
-    #    
-    def looper(self):
-        day = time.strftime('%A')
-        week = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
-        week2 = ["Mon", "Tue", "Wed", "Thu", "Fri"]
-        today = datetime.date.today().ctime().split(" ")
-        print('ctime:', today)
-        time.sleep(604800)
-    # git commands
+    # #
+    # def getDigits(self, num):
+    #     if (num / 10) < 1:
+    #         return "0"+str(num)
+    #     return str(num)
+    # #
+    # def getStringOfDate(self, date):
+    #     res = "" + str(date.year) + "-" + self.getDigits(date.month) + "-" + self.getDigits(date.day) + " 16:00:00.000000"
+    #     return res
+    # #
+    # def dateAddition(self, fileName):
+    #     if fileName == "date60":
+    #         self.day60 = datetime.datetime.fromisoformat(self.currentDate["date60"]) + datetime.timedelta(60)
+    #         self.currentDate[fileName] = self.getStringOfDate(self.day60)
+    #     elif fileName == "date7":
+    #         self.day7 = datetime.datetime.fromisoformat(self.currentDate["date7"]) + datetime.timedelta(7)
+    #         self.currentDate[fileName] = self.getStringOfDate(self.day7)
+    #     else:
+    #         print(f"Wrong date file: <{fileName}>")
+    # #    
+    # def looper(self):
+    #     day = time.strftime('%A')
+    #     week = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+    #     week2 = ["Mon", "Tue", "Wed", "Thu", "Fri"]
+    #     today = datetime.date.today().ctime().split(" ")
+    #     print('ctime:', today)
+    #     time.sleep(604800)
+    # # git commands
     def runIt(self, *args):
         return subprocess.check_call(['git'] + list(args))
-    # loads the last date, data was collected from yf.
-    def loadJson(self, fPath, name):
-        if type(name) is list:
-            result = []
-            for n in name:
-                with open(fPath(n), "r") as statusFile:
-                    result.append(json.load(statusFile))
-                    statusFile.close()
-            return result
-        with open(fPath(name), "r") as statusFile:
-            me = json.load(statusFile)
-            statusFile.close()
-            return me
-    # writes json_status to fileName.json
-    def writeJson(self, json_status, fileName):
-        with open(fileName, "w") as statusFile:
-            statusFile.write(json_status)
-            statusFile.close()
-    # updates the status.json that keeps track of the dates for gathering data from yf.
-    def updateStatus(self, fileName):
-        #status = {"date7": "2021-08-21 16:00:00.000000","date60": "2022-10-13 16:00:00.000000"}
-        self.dateAddition(fileName)
-        json_status = json.dumps(self.currentDate, indent=4)
-        self.writeJson(json_status, "currentDate.json")
-        self.currentDate = self.loadJson(lambda name: name, "currentDate.json")
-    # Calculates the difference between the next date and now, and then sleep for the result.
-    def sleepTime(self, fileName):
-        day = datetime.datetime.fromisoformat(self.currentDate[fileName]) - datetime.datetime.now()
-        seconds = day.total_seconds()
-        print(f"Sleeping for : {seconds}")
-        time.sleep(seconds)
+    # # loads the last date, data was collected from yf.
+    # def loadJson(self, fPath, name):
+    #     if type(name) is list:
+    #         result = []
+    #         for n in name:
+    #             with open(fPath(n), "r") as statusFile:
+    #                 result.append(json.load(statusFile))
+    #                 statusFile.close()
+    #         return result
+    #     with open(fPath(name), "r") as statusFile:
+    #         me = json.load(statusFile)
+    #         statusFile.close()
+    #         return me
+    # # writes json_status to fileName.json
+    # def writeJson(self, json_status, fileName):
+    #     with open(fileName, "w") as statusFile:
+    #         statusFile.write(json_status)
+    #         statusFile.close()
+    # # updates the status.json that keeps track of the dates for gathering data from yf.
+    # def updateStatus(self, fileName):
+    #     #status = {"date7": "2021-08-21 16:00:00.000000","date60": "2022-10-13 16:00:00.000000"}
+    #     self.dateAddition(fileName)
+    #     json_status = json.dumps(self.currentDate, indent=4)
+    #     self.writeJson(json_status, "currentDate.json")
+    #     self.currentDate = self.loadJson(lambda name: name, "currentDate.json")
+    # # Calculates the difference between the next date and now, and then sleep for the result.
+    # def sleepTime(self, fileName):
+    #     day = datetime.datetime.fromisoformat(self.currentDate[fileName]) - datetime.datetime.now()
+    #     seconds = day.total_seconds()
+    #     print(f"Sleeping for : {seconds}")
+    #     time.sleep(seconds)
     # returns a list of dataframe made from the excel sheets from all of the stocks.
     def filter(self, price, statistic):
         lessThanMean = [price[i] < statistic[i]["mean"] for i in range(len(self.stocks))]
@@ -132,28 +135,28 @@ class Nasdaq:
     def run(self, name):
         while(True):
             print(f"Running {name} Thread!")
-            self.sleepTime(name)
-            i = 2
-            if (name == "date7"):
-                for name in self.stocks:
-                    M1 = YFinance(name)
-                    M1.getLast5Days()
-                    M1.getHighLow()
-                pushDataToDB(self.stocks, "MINUTE", "Minute")
-            else:
-                i = 1
-                for name in self.stocks:
-                    M2 = YFinance(name)
-                    M2.getLast60Days()
-                pushDataToDB(self.stocks, "TWO_MINUTE", "TwoMinute")
-            # I have to push these files into the database first before I do anything else.
-            #self.deleteOldFiles(i)
-            print("Updating next date for : ", name)
-            while(self.lock):
-                print("Lock is on!")
-                time.sleep(3)
+            # sleepTime(name)
+            # i = 2
+            # if (name == "date7"):
+            #     for n in self.stocks:
+            #         M1 = YFinance(n)
+            #         M1.getLast5Days()
+            #         M1.getHighLow()
+            #     pushDataToDB(self.stocks, "MINUTE", "Minute")
+            # else:
+            #     i = 1
+            #     for n in self.stocks:
+            #         M2 = YFinance(n)
+            #         M2.getLast60Days()
+            #     pushDataToDB(self.stocks, "TWO_MINUTE", "TwoMinute")
+            # # I have to push these files into the database first before I do anything else.
+            # #self.deleteOldFiles(i)
+            # print("Updating next date for : ", name)
+            # while(self.lock):
+            #     print("Lock is on!")
+            #     time.sleep(3)
             self.lock = True
-            self.updateStatus(name)
+            updateStatus(currentDate, name)
             self.lock = False
             #self.clear()
             
