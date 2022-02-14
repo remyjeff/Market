@@ -333,6 +333,7 @@ class Robin:
 #
 if __name__=="__main__":
     myRobin = Robin()
-    print(myRobin.signIn())
+    print(myRobin.getLatestPrice("AAPL"))
+    
     myRobin.signOut()
     

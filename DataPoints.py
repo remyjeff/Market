@@ -18,6 +18,7 @@ class Nasdaq:
         self.counter = 0
         currentDate = getDate()
         self.lock = False
+        #self.weekStatistic()
         self.start()
    
     # # git commands
@@ -86,6 +87,13 @@ class Nasdaq:
                 #print(f"{df['High'][i]} - {df['Low'][i]}", df["High"][i] - df["Low"][i])
             arr[name] = {"averageDiff":diff / len(df), "count":count, "streak": sum(streakArr)/len(streakArr)}
         return arr
+    
+    def weekStatistic(self):
+        R = Robin() #TODO robinhood api is not working.
+        price = R.getLatestPrice(self.stocks)
+        statistic = loadJson(lambda n : f"Stocks/{n}/Statistic.json", self.stocks)
+        self.filter(price, statistic)
+        R.signOut()
     #
     def clear(self):
         os.system('cls' if os.name=='nt' else 'clear')
@@ -93,7 +101,7 @@ class Nasdaq:
     def run(self, name):
         while(True):
             print(f"Running {name} Thread!")
-            #sleepTime(name)
+            sleepTime(name)
             i = 2
             if (name == "date7"):
                 for n in self.stocks:
@@ -114,15 +122,9 @@ class Nasdaq:
                 print("Lock is on!")
                 time.sleep(3)
             self.lock = True
-            #updateStatus(currentDate, name)
+            updateStatus(currentDate, name)
             self.lock = False
-            #self.clear()
-            
-            #R = Robin()
-            #price = R.getLatestPrice(self.stocks)
-            #statistic = self.loadJson(lambda n : f"Stocks/{n}/{n}_Statistic.json", self.stocks)
-            #self.filter(price, statistic)
-            #R.signOut()
+            self.clear()
         
             self.runIt("add", ".")
             self.runIt("commit", "-m", f"This is the {self.counter}th saving data.")
