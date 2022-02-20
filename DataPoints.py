@@ -129,8 +129,7 @@ class Nasdaq:
             self.runIt("add", ".")
             self.runIt("commit", "-m", f"This is the {self.counter}th saving data.")
             self.counter += 1
-            break
-        print("Done Running: ", name)
+            print("Done Running: ", name)
     #
     def start(self):
         print(f"Running Start.")
