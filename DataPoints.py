@@ -19,7 +19,8 @@ class Nasdaq:
         currentDate = getDate()
         self.lock = False
         #self.weekStatistic()
-        self.start()
+        #self.start()
+        dateValidation("02/02/22")
    
     # # git commands
     def runIt(self, *args):

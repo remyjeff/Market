@@ -21,7 +21,6 @@ def execute_query(connection, query):
     try:
         cursor.execute(query) # error is here.
         connection.commit()
-        #print("Query executed successfully")
     except Error as e:
         print(f"The error '{e}' occurred")
 
@@ -81,6 +80,13 @@ def isInStocks(name):
         if name == user[1]:
             return True
     return False
-#pushDataToDB()
-stocks = ["NVDA", "TSLA", "AAPL", "PLTR", "ACB", "TLRY", "RTX", "BA", "NFLX", "SPY", "FSLY", "JKS", "PLUG", "FCEL", "FB"]
-#pushStock(stocks)
+
+def dateValidation(name):
+    connection = create_connection("localhost", "root", "", "STOCK_MARKET")
+    select_stocks = """
+    SELECT * FROM DATES;"""
+    stocks = execute_read_query(connection, select_stocks)
+    for user in stocks:
+        if (name == user[0]):
+            return True
+    return False
