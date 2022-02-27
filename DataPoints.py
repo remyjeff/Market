@@ -89,11 +89,11 @@ class Nasdaq:
         return arr
     
     def weekStatistic(self):
-        R = Robin() #TODO robinhood api is not working.
-        price = R.getLatestPrice(self.stocks)
+        #R = Robin() #TODO robinhood api is not working.
+        price = [x*x+100 for x in range(20)]#R.getLatestPrice(self.stocks)
         statistic = loadJson(lambda n : f"Stocks/{n}/Statistic.json", self.stocks)
         self.filter(price, statistic)
-        R.signOut()
+        #R.signOut()
     #
     def clear(self):
         os.system('cls' if os.name=='nt' else 'clear')
@@ -144,5 +144,6 @@ class Nasdaq:
             print("Error: Unable to start thread.")
 if __name__ == '__main__':
     N1 = Nasdaq("stocklist")
+    N1.weekStatistic()
 
 
