@@ -25,14 +25,14 @@ class Nasdaq:
     # # git commands
     def runIt(self, *args):
         return subprocess.check_call(['git'] + list(args))
-    
+    #
     def read(self, listName):
         lst = []
         with open("stocklist", 'r') as file:
             for line in file:
                 lst.append(line.strip("\n"))
         return lst
-    
+    #
     def insertStockIfNotInTable(self):
         for name in self.stocks:
             if not isInStocks(name):
@@ -40,8 +40,7 @@ class Nasdaq:
                 makeNewFolder(lambda name : f"Stocks/"+name, [name])
                 newFiles(lambda name: f"Stocks/{name}/Minute.xlsx", [name])
                 newFiles(lambda name: f"Stocks/{name}/TwoMinute.xlsx", [name])
-                newFiles(lambda name: f"Stocks/{name}/HighLow.xlsx", [name])
-    
+                newFiles(lambda name: f"Stocks/{name}/HighLow.xlsx", [name])  
     # returns a list of dataframe made from the excel sheets from all of the stocks.
     def filter(self, price, statistic):
         lessThanMean = [price[i] < statistic[i]["mean"] for i in range(len(self.stocks))]
@@ -88,13 +87,12 @@ class Nasdaq:
                 #print(f"{df['High'][i]} - {df['Low'][i]}", df["High"][i] - df["Low"][i])
             arr[name] = {"averageDiff":diff / len(df), "count":count, "streak": sum(streakArr)/len(streakArr)}
         return arr
-    
+    #
     def weekStatistic(self):
         #R = Robin() #TODO robinhood api is not working.
         price = [x*x+100 for x in range(20)]#R.getLatestPrice(self.stocks)
         statistic = loadJson(lambda n : f"Stocks/{n}/Statistic.json", self.stocks)
         self.filter(price, statistic)
-        #R.signOut()
     #
     def clear(self):
         os.system('cls' if os.name=='nt' else 'clear')
@@ -145,6 +143,6 @@ class Nasdaq:
             print("Error: Unable to start thread.")
 if __name__ == '__main__':
     N1 = Nasdaq("stocklist")
-    N1.weekStatistic()
+    N1.weekStatistic() # TODO : need to reimplement this function.
 
 

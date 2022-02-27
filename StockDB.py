@@ -46,10 +46,6 @@ def pushDataToDB(stocks, table, fileName):
             {d};
             """
             execute_query(connection, inserting)  
-    #select_stocks = "SELECT * from TWO_MINUTE"
-    #stocks = execute_read_query(connection, select_stocks)
-    #for user in stocks:
-        #print(user)
 
 def pushStock(stocks):
     connection = create_connection("localhost", "root", "", "STOCK_MARKET")
