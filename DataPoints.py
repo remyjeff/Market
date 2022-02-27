@@ -5,7 +5,6 @@ import os, errno
 import subprocess, json, sys, path
 from FileManagement import makeNewFolder, newFiles
 from MyTime import *
-from robin import Robin
 import yfinance as yf
 from multiprocessing import Process, Lock
 from YFinance import YFinance
