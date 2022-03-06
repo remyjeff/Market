@@ -98,5 +98,3 @@ def readExcel(id, filePath):
             RESULT = f"""({id}, '{df["Datetime"][d]}', {df["Open"][d]}, {df["High"][d]}, {df["Low"][d]}, {df["Close"][d]}, {df["Volume"][d]})"""
             result.append(RESULT)
     return result
-
-# data = readExcel(id, f"./Stocks/AAPL/Minute.xlsx")
