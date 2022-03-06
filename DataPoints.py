@@ -18,8 +18,8 @@ class Nasdaq:
         currentDate = getDate()
         self.lock = False
         #self.weekStatistic()
-        #self.start()
-        dateValidation("02/02/22")
+        self.start()
+        #dateValidation("02/02/22")
    
     # # git commands
     def runIt(self, *args):
@@ -142,6 +142,6 @@ class Nasdaq:
             print("Error: Unable to start thread.")
 if __name__ == '__main__':
     N1 = Nasdaq("stocklist")
-    N1.weekStatistic() # TODO : need to reimplement this function.
+    #N1.weekStatistic() # TODO : need to reimplement this function.
 
 

@@ -30,6 +30,12 @@ Volume int not null,
 constraint pk primary key(Id, Datetime),
 foreign key(Id) references STOCKS(Id));
 
+CREATE TABLE NEWS(
+    ID INT NOT NULL,
+    Link Varchar(255),
+    
+);
+
 DROP TABLE MINUTE;
 DROP TABLE TWO_MINUTE;
 
