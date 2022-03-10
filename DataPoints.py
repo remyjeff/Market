@@ -9,6 +9,7 @@ import yfinance as yf
 from multiprocessing import Process, Lock
 from YFinance import YFinance
 from StockDB import *
+import rds_config, pushToAWSDB
 
 class Nasdaq:
     def __init__(self, listName):
@@ -20,7 +21,6 @@ class Nasdaq:
         #self.weekStatistic()
         self.start()
         #dateValidation("02/02/22")
-   
     # # git commands
     def runIt(self, *args):
         return subprocess.check_call(['git'] + list(args))
@@ -95,11 +95,25 @@ class Nasdaq:
     #
     def clear(self):
         os.system('cls' if os.name=='nt' else 'clear')
+    # reads all of the excel files and combines into a single. might have to check the datetime format.
+    def getAllExcel(self, fileName):
+        result = []
+        for ticker in self.stocks:
+            result.append(readExcel(getId(ticker), f"./Stocks/{ticker}/{fileName}.xlsx"))
+        return result
     #
     def run(self, name):
         while(True):
             print(f"Running {name} Thread!")
             sleepTime(name)
+            event = {
+                "rds_host" : "market.cucrygetviqs.us-east-1.rds.amazonaws.com",
+                "name": rds_config.db_username,
+                "password": rds_config.db_password,
+                "db_name": rds_config.db_name,
+                "table": "TWO_MINUTE",
+                "data": []
+            }
             i = 2
             if (name == "date7"):
                 for n in self.stocks:
@@ -107,12 +121,16 @@ class Nasdaq:
                     M1.getLast5Days()
                     M1.getHighLow()
                 pushDataToDB(self.stocks, "MINUTE", "Minute")
+                event["data"] = getDateFormat(self.getAllExcel("Minute"))
             else:
                 i = 1
                 for n in self.stocks:
                     M2 = YFinance(n)
                     M2.getLast60Days()
                 pushDataToDB(self.stocks, "TWO_MINUTE", "TwoMinute")
+                event["data"] = getDateFormat(self.getAllExcel("TwoMinute"))
+            AWS = pushToAWSDB(event, None)
+            AWS = None
             # I have to push these files into the database first before I do anything else.
             #self.deleteOldFiles(i)
             print("Updating next date for : ", name)

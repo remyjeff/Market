@@ -1,3 +1,4 @@
+import datetime
 import yfinance as yf
 import pandas as pd
 import time
@@ -23,7 +24,18 @@ class YFinance():
         historical = yf.download(tickers=self.ticker, period="6mo", interval="1d")
         historical.to_excel(f"./Stocks/{self.ticker}/HighLow.xlsx", index=False)
         self.updateStatistic()
+    # 
+    def getOptionDates(self):
+        return yf.Ticker(self.ticker).options # returns (date0, date1 --- date_n)
     #    
+    def getCallOptionChain(self, date):
+        s = yf.Ticker(self.ticker).option_chain(date).calls
+        #s.plot()
+        return s
+    #    
+    def getPutOptionChain(self, date):
+        return yf.Ticker(self.ticker).option_chain(date).puts
+    #
     def updateStatistic(self):
             df = pd.DataFrame()
             main = pd.read_excel(f"./Stocks/{self.ticker}/HighLow.xlsx")["Open"].describe().to_json(indent=0)
@@ -40,3 +52,8 @@ class YFinance():
         f3 = f1.append(f2)
         f3.drop_duplicates() # last added.
         f3.to_excel(f"Stocks/{self.ticker}/{self.ticker}Final{n}.xlsx", index=False)
+
+if __name__ == "__main__":
+    Y = YFinance("AAPL")
+    d = str(datetime.datetime.now())[:10]
+    print(Y.getCallOptionChain(Y.getOptionDates()[0]))

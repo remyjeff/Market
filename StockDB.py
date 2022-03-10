@@ -98,3 +98,11 @@ def readExcel(id, filePath):
             RESULT = f"""({id}, '{df["Datetime"][d]}', {df["Open"][d]}, {df["High"][d]}, {df["Low"][d]}, {df["Close"][d]}, {df["Volume"][d]})"""
             result.append(RESULT)
     return result
+
+def getDateFormat(stock):
+    stocks = stock
+    for i in range(len(stocks)):
+        temp = list(stocks[i])
+        temp[1] = temp[1].strftime("%Y-%m-%d %H:%M:%S")
+        stocks[i] = tuple(temp)
+    return stocks
