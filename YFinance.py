@@ -5,6 +5,7 @@ import time
 class YFinance():
     def __init__(self, ticker) -> None:
         self.ticker = ticker
+        self.stock = yf.Ticker(ticker)
     #
     def getLast5Days(self): # returns a dictionary with the ticker name as key and dataframe as value.
         result = {}
@@ -26,15 +27,18 @@ class YFinance():
         self.updateStatistic()
     # 
     def getOptionDates(self):
-        return yf.Ticker(self.ticker).options # returns (date0, date1 --- date_n)
+        return self.stock.options # returns (date0, date1 --- date_n)
     #    
     def getCallOptionChain(self, date):
-        s = yf.Ticker(self.ticker).option_chain(date).calls
+        s = self.stock.option_chain(date).calls
         #s.plot()
         return s
     #    
     def getPutOptionChain(self, date):
-        return yf.Ticker(self.ticker).option_chain(date).puts
+        return self.stock.option_chain(date).puts
+    #
+    def getInfo(self):
+        return self.stock.info
     #
     def updateStatistic(self):
             df = pd.DataFrame()
@@ -55,5 +59,15 @@ class YFinance():
 
 if __name__ == "__main__":
     Y = YFinance("AAPL")
-    d = str(datetime.datetime.now())[:10]
-    print(Y.getCallOptionChain(Y.getOptionDates()[0]))
+    info = Y.getInfo()
+    for k, v in info.items():
+        print(k, " : ", v)
+    # s = yf.Ticker("AMZN")
+    # print(s.splits)
+    # earning = s.earnings
+    # print(earning)
+    # print(s.institutional_holders)
+    # print(s.major_holders)
+    # print(s.calendar)
+    #d = str(datetime.datetime.now())[:10]
+    #print(Y.getCallOptionChain(Y.getOptionDates()[0]))
