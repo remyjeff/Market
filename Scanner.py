@@ -15,7 +15,7 @@ def scan():
 def volumeScanner(lst):
     result = []
     for l in lst:
-        if (l.getInfo()["averageVolume"] <= l.getInfo()["volume"] * 1.025):
+        if (l.getInfo()["averageVolume"]*1.05 <= l.getInfo()["volume"]):
             print(l.ticker, " has high volume. CHECK NEWS OUTLETS.")
             result.append(l.ticker)
     return result
@@ -23,4 +23,4 @@ def volumeScanner(lst):
 if __name__ == "__main__":
     while(True):
         volumeScanner(scan())
-        time.sleep(300)
+        time.sleep(150)

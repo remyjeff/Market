@@ -9,7 +9,8 @@ import yfinance as yf
 from multiprocessing import Process, Lock
 from YFinance import YFinance
 from StockDB import *
-import rds_config, pushToAWSDB
+import rds_config
+from pushToAWSDB import AwsResource
 
 class Nasdaq:
     def __init__(self, listName):
@@ -18,8 +19,9 @@ class Nasdaq:
         self.counter = 0
         currentDate = getDate()
         self.lock = False
+        self.run("date7")
         #self.weekStatistic()
-        self.start()
+        #self.start()
         #dateValidation("02/02/22")
     # # git commands
     def runIt(self, *args):
@@ -117,19 +119,21 @@ class Nasdaq:
             i = 2
             if (name == "date7"):
                 for n in self.stocks:
-                    M1 = YFinance(n)
-                    M1.getLast5Days()
-                    M1.getHighLow()
-                pushDataToDB(self.stocks, "MINUTE", "Minute")
-                event["data"] = getDateFormat(self.getAllExcel("Minute"))
+                    break
+                    #M1 = YFinance(n)
+                    #M1.getLast5Days()
+                    #M1.getHighLow()
+                #pushDataToDB(self.stocks, "MINUTE", "Minute")
+                data = self.getAllExcel("Minute")
+                event["data"] = data
             else:
                 i = 1
                 for n in self.stocks:
                     M2 = YFinance(n)
                     M2.getLast60Days()
                 pushDataToDB(self.stocks, "TWO_MINUTE", "TwoMinute")
-                event["data"] = getDateFormat(self.getAllExcel("TwoMinute"))
-            AWS = pushToAWSDB(event, None)
+                event["data"] = self.getAllExcel("TwoMinute") #getDateFormat(self.getAllExcel("TwoMinute"))
+            AWS = AwsResource(event, None)
             AWS = None
             # I have to push these files into the database first before I do anything else.
             #self.deleteOldFiles(i)

@@ -35,12 +35,13 @@ class AwsResource:
             self.conn.commit()
             statement = f'INSERT INTO {event["table"]} VALUES '
             for el in event["data"]:
-                temp = statement + str(el)
-                i += 1
-                cur.execute(temp)
-                if i % 1000 == 0:
-                    self.conn.commit()
-                    print(f"{i} amount has been pushed.")
+                for l in el:
+                    temp = statement + str(l)
+                    i += 1
+                    cur.execute(temp)
+                    if i % 1000 == 0:
+                        self.conn.commit()
+                        print(f"{i} amount has been pushed.")
         self.conn.commit()
         self.conn.close()
 

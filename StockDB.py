@@ -103,6 +103,8 @@ def getDateFormat(stock):
     stocks = stock
     for i in range(len(stocks)):
         temp = list(stocks[i])
-        temp[1] = temp[1].strftime("%Y-%m-%d %H:%M:%S")
-        stocks[i] = tuple(temp)
+        print(temp)
+        #print(stock)
+        #temp[1] = temp[1].strftime("%Y-%m-%d %H:%M:%S")
+        #stocks[i] = tuple(temp)
     return stocks
