@@ -107,7 +107,7 @@ class Nasdaq:
     def run(self, name):
         while(True):
             print(f"Running {name} Thread!")
-            sleepTime(name)
+            #sleepTime(name)
             event = {
                 "rds_host" : "market.cucrygetviqs.us-east-1.rds.amazonaws.com",
                 "name": rds_config.db_username,
@@ -123,16 +123,15 @@ class Nasdaq:
                     #M1 = YFinance(n)
                     #M1.getLast5Days()
                     #M1.getHighLow()
-                #pushDataToDB(self.stocks, "MINUTE", "Minute")
-                data = self.getAllExcel("Minute")
-                event["data"] = data
+                pushDataToDB(self.stocks, "MINUTE", "Minute")
+                #event["data"] = self.getAllExcel("Minute")
             else:
                 i = 1
                 for n in self.stocks:
                     M2 = YFinance(n)
                     M2.getLast60Days()
                 pushDataToDB(self.stocks, "TWO_MINUTE", "TwoMinute")
-                event["data"] = self.getAllExcel("TwoMinute") #getDateFormat(self.getAllExcel("TwoMinute"))
+                #event["data"] = self.getAllExcel("TwoMinute") #getDateFormat(self.getAllExcel("TwoMinute"))
             AWS = AwsResource(event, None)
             AWS = None
             # I have to push these files into the database first before I do anything else.
@@ -150,6 +149,7 @@ class Nasdaq:
             self.runIt("commit", "-m", f"This is the {self.counter}th saving data.")
             self.counter += 1
             print("Done Running: ", name)
+            break
     #
     def start(self):
         print(f"Running Start.")
