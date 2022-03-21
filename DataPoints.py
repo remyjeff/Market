@@ -112,7 +112,7 @@ class Nasdaq:
     def run(self, name):
         while(True):
             print(f"Running {name} Thread!")
-            #sleepTime(name)
+            sleepTime(name)
             event = {
                 "rds_host" : "market.cucrygetviqs.us-east-1.rds.amazonaws.com",
                 "name": rds_config.db_username,

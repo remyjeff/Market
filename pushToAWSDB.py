@@ -63,13 +63,6 @@ class AwsResource:
         }
 
 if __name__ == '__main__':
-
-    # connection = create_connection("localhost", "root", "", "STOCK_MARKET")
-    # select_stocks = """
-    # SELECT * FROM MINUTE;"""
-    # stocks = execute_read_query(connection, select_stocks)
-    # stocks = getDateFormat(stocks)
-    # stocks.reverse()
     event = {
         "rds_host" : "market.cucrygetviqs.us-east-1.rds.amazonaws.com",
         "name": rds_config.db_username,
