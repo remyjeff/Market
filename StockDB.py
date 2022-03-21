@@ -89,7 +89,7 @@ def dateValidation(name):
     return False
 
 def readExcel(id, filePath):
-    connection = create_connection("localhost", "root", "", "STOCK_MARKET")
+    #connection = create_connection("localhost", "root", "", "STOCK_MARKET")
     df = pd.read_excel(filePath)
     result = []
     for d in df.index:

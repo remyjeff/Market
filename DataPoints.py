@@ -2,7 +2,7 @@
 import pandas as pd
 import time, datetime
 import os, errno
-import subprocess, json, sys, path
+import subprocess, json, sys
 from FileManagement import makeNewFolder, newFiles
 from MyTime import *
 import yfinance as yf
@@ -15,13 +15,13 @@ from pushToAWSDB import AwsResource
 class Nasdaq:
     def __init__(self, listName):
         self.stocks = self.read(listName) #["NVDA", "TSLA", "AAPL", "PLTR", "ACB", "TLRY", "RTX", "BA", "NFLX", "SPY", "FSLY", "JKS", "PLUG", "FCEL", "FB"]
-        self.insertStockIfNotInTable()
+        #self.insertStockIfNotInTable()
         self.counter = 0
         currentDate = getDate()
         self.lock = False
-        self.run("date7")
+        #self.run("date7")
         #self.weekStatistic()
-        #self.start()
+        self.start()
         #dateValidation("02/02/22")
     # # git commands
     def runIt(self, *args):
@@ -98,10 +98,15 @@ class Nasdaq:
     def clear(self):
         os.system('cls' if os.name=='nt' else 'clear')
     # reads all of the excel files and combines into a single. might have to check the datetime format.
-    def getAllExcel(self, fileName):
+    def getAllExcel(self, event, fileName):
+        A = AwsResource(event)
+        Id = {}
+        for n in A.readTable({"table":"STOCKS"}):
+            Id[n[1]] = n[0]
         result = []
         for ticker in self.stocks:
-            result.append(readExcel(getId(ticker), f"./Stocks/{ticker}/{fileName}.xlsx"))
+            result.append(readExcel(Id[ticker], f"./Stocks/{ticker}/{fileName}.xlsx"))
+        A.close()
         return result
     #
     def run(self, name):
@@ -113,26 +118,29 @@ class Nasdaq:
                 "name": rds_config.db_username,
                 "password": rds_config.db_password,
                 "db_name": rds_config.db_name,
-                "table": "TWO_MINUTE",
+                "table": "",
                 "data": []
             }
             i = 2
             if (name == "date7"):
                 for n in self.stocks:
-                    break
-                    #M1 = YFinance(n)
-                    #M1.getLast5Days()
-                    #M1.getHighLow()
-                pushDataToDB(self.stocks, "MINUTE", "Minute")
-                #event["data"] = self.getAllExcel("Minute")
+                    M1 = YFinance(n)
+                    M1.getLast5Days()
+                    M1.getHighLow()
+                #pushDataToDB(self.stocks, "MINUTE", "Minute")
+                event["table"] = "MINUTE"
+                event["data"] = self.getAllExcel(event, "Minute")
             else:
                 i = 1
                 for n in self.stocks:
                     M2 = YFinance(n)
                     M2.getLast60Days()
-                pushDataToDB(self.stocks, "TWO_MINUTE", "TwoMinute")
-                #event["data"] = self.getAllExcel("TwoMinute") #getDateFormat(self.getAllExcel("TwoMinute"))
+                #pushDataToDB(self.stocks, "TWO_MINUTE", "TwoMinute")
+                event["table"] = "TWO_MINUTE"
+                event["data"] = self.getAllExcel("TwoMinute")
             AWS = AwsResource(event, None)
+            AWS.lambda_handler(event, None)
+            AWS.close()
             AWS = None
             # I have to push these files into the database first before I do anything else.
             #self.deleteOldFiles(i)
@@ -149,7 +157,6 @@ class Nasdaq:
             self.runIt("commit", "-m", f"This is the {self.counter}th saving data.")
             self.counter += 1
             print("Done Running: ", name)
-            break
     #
     def start(self):
         print(f"Running Start.")
@@ -159,7 +166,6 @@ class Nasdaq:
             time.sleep(3)
             p1 = Process(target=self.run, args=('date60',))
             p1.start()
-            
         except:
             print("Error: Unable to start thread.")
 if __name__ == '__main__':
